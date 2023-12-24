@@ -12,7 +12,7 @@ Future<Response> onRequest(RequestContext context) async {
 
 Future<Response> _authUser(RequestContext context) async {
   final json = (await context.request.json()) as Map<String, dynamic>;
-  print(json.toString());
+
   final username = json['username'] as String?;
   final password = json['password'] as String?;
 
