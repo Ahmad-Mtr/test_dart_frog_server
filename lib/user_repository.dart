@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dart_frog/src/middleware.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:test_dart_frog_server/src/generated/prisma/prisma_client.dart';
 import 'package:crypto/crypto.dart';
 
@@ -43,5 +45,14 @@ class UserRepository {
   String _hashPassword(String password) {
     final encodedpassword = utf8.encode(password);
     return sha256.convert(encodedpassword).toString();
+  }
+
+  int? fetchUserFromToken(String token) {
+    try {
+      final jwt = JWT.verify(token, SecretKey("123456"));
+      return jwt.payload as int;
+    } on JWTException catch (_) {
+      return null;
+    }
   }
 }

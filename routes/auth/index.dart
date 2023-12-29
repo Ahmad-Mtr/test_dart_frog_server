@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:test_dart_frog_server/user_repository.dart';
 
 Future<Response> onRequest(RequestContext context) async {
@@ -25,7 +26,15 @@ Future<Response> _authUser(RequestContext context) async {
   final repo = context.read<UserRepository>();
   final user = await repo.authUser(username: username, password: password);
 
+  if (user == null) {
+    return Response.json(body: {
+      'message': 'User not found',
+    }, statusCode: HttpStatus.notFound);
+  }
+
+  final jwt = JWT(user.id);
+  final token = jwt.sign(SecretKey('123456'));
   return Response.json(
-    body: {'user': user},
+    body: {'user': user, 'token': token},
   );
 }

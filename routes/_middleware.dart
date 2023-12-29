@@ -6,7 +6,13 @@ import 'package:test_dart_frog_server/user_repository.dart';
 
 Handler middleware(Handler handler) {
   // TODO: implement middleware
-  return handler.use(_provideUserRepo()).use(requestLogger());
+  return handler
+      .use(
+        _provideUserRepo(),
+      )
+      .use(
+        requestLogger(),
+      );
 }
 
 final _prisma = PrismaClient(
